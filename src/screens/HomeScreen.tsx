@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
   RefreshControl,
+  StatusBar,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
@@ -49,7 +50,6 @@ export const HomeScreen = () => {
           <Text style={typography.meta}>ID: {item.id.slice(0, 8)}</Text>
         </View>
 
-        {/* Status */}
         <View style={tableStyles.cell}>
           <View
             style={[
@@ -75,7 +75,6 @@ export const HomeScreen = () => {
           </View>
         </View>
 
-        {/* Time */}
         <View style={tableStyles.cell}>
           <Text style={typography.meta}>{formatTime(item.createdAt)}</Text>
         </View>
@@ -85,13 +84,12 @@ export const HomeScreen = () => {
 
   return (
     <View style={commonStyles.container}>
-      {/* Modal */}
+      <StatusBar hidden/>
       <AddTransactionModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
       />
 
-      {/* Device Info */}
       <View style={commonStyles.card}>
         <DeviceInfoSection refreshKey={refreshKey} />
       </View>
@@ -105,7 +103,6 @@ export const HomeScreen = () => {
         <Text style={buttonStyles.primaryText}>Add Transaction</Text>
       </TouchableOpacity>
 
-      {/* ⭐ Table Headers */}
       <View style={tableStyles.headerRow}>
         <Text style={tableStyles.headerText}>AMOUNT / ID</Text>
         <Text style={tableStyles.headerText}>STATUS</Text>

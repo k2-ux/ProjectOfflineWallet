@@ -17,11 +17,9 @@ export const createPayment = async (amount: number) => {
     updatedAt: now,
   };
 
-  // 1️⃣ Persist immediately (offline-safe)
   await insertTransaction(transaction);
   await loadTransactionsFromDB();
 
-  // 2️⃣ Move to PENDING
   await updateStatus(transaction.id, 'PENDING');
   processPayment(transaction.id, amount);
   await loadTransactionsFromDB();
@@ -40,7 +38,6 @@ export const processPayment = async (transactionId: string, amount: number) => {
       await updateStatus(transactionId, 'FAILED');
     }
   } catch (err) {
-    // Network error → keep PENDING
     await updateStatus(transactionId, 'PENDING');
   }
 };

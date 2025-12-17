@@ -1,6 +1,5 @@
 import { StyleSheet } from 'react-native';
 
-/* ---------- Colors ---------- */
 export const colors = {
   primary: '#0b53c7ff',
   background: '#b8e8e49b',
@@ -11,7 +10,6 @@ export const colors = {
   error: '#DC2626',
   border: '#E2E8F0',
 };
-/* ---------- Fonts ---------- */
 
 export const fonts = {
   regular: 'SourceSans3-Regular',
@@ -20,9 +18,7 @@ export const fonts = {
   italic: 'SourceSans3-Italic',
 };
 
-/* ---------- Typography ---------- */
 export const typography = {
-  // Screen titles
   h1: {
     fontFamily: fonts.bold,
     fontSize: 20,
@@ -30,7 +26,6 @@ export const typography = {
     color: '#0F172A',
   },
 
-  // Column headers / labels
   label: {
     fontFamily: fonts.medium,
     fontSize: 12,
@@ -38,28 +33,24 @@ export const typography = {
     color: '#64748B',
   },
 
-  // Normal body text
   body: {
     fontFamily: fonts.regular,
     fontSize: 14,
     color: '#0F172A',
   },
 
-  // Amounts / important numbers
   amount: {
     fontFamily: fonts.medium,
     fontSize: 15,
     color: '#0F172A',
   },
 
-  // Metadata (time, hints)
   meta: {
     fontFamily: fonts.regular,
     fontSize: 12,
     color: '#64748B',
   },
 
-  // Button text
   button: {
     fontFamily: fonts.bold,
     fontSize: 15,
@@ -67,7 +58,6 @@ export const typography = {
     color: '#FFFFFF',
   },
 
-  // Optional italic text (notes, subtle emphasis)
   italic: {
     fontFamily: fonts.italic,
     fontSize: 13,
@@ -75,7 +65,6 @@ export const typography = {
   },
 };
 
-/* ---------- Common Layout ---------- */
 export const commonStyles = StyleSheet.create({
   container: {
     flex: 1,
@@ -107,7 +96,6 @@ export const commonStyles = StyleSheet.create({
   },
 });
 
-/* ---------- Buttons ---------- */
 export const buttonStyles = StyleSheet.create({
   primary: {
     backgroundColor: colors.primary,
@@ -125,7 +113,6 @@ export const buttonStyles = StyleSheet.create({
   },
 });
 
-/* ---------- Table / List ---------- */
 export const tableStyles = StyleSheet.create({
   headerRow: {
     flexDirection: 'row',
