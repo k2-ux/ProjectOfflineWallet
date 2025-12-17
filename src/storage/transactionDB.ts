@@ -53,3 +53,26 @@ export const getPendingTransactions = async () => {
   return list;
 };
 
+// transactionDB.ts
+export const getTransactionsPage = async (
+  limit: number,
+  offset: number,
+) => {
+  const db = await getDB();
+
+  const [result] = await db.executeSql(
+    `SELECT * FROM transactions
+     ORDER BY createdAt DESC
+     LIMIT ? OFFSET ?`,
+    [limit, offset],
+  );
+
+  const rows = result.rows;
+  const data = [];
+
+  for (let i = 0; i < rows.length; i++) {
+    data.push(rows.item(i));
+  }
+
+  return data;
+};

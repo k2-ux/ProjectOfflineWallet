@@ -20,6 +20,8 @@ import {
   typography,
 } from '../styles/styles';
 import { formatTime } from '../utils/funtions';
+import TransactionRow from '../components/TransactionRow';
+import { loadNextPage } from '../services/transactionLoader';
 
 export const HomeScreen = () => {
   const transactions = useSelector(
@@ -39,52 +41,9 @@ export const HomeScreen = () => {
     }, 500);
   }, []);
 
-  const renderItem = useCallback(({ item }: { item: Transaction }) => {
-    const isSuccess = item.status === 'SUCCESS';
-    const isPending = item.status === 'PENDING' || item.status === 'INITIATED';
-
-    return (
-      <View style={tableStyles.row}>
-        <View style={tableStyles.cell}>
-          <Text style={typography.amount}>₹{item.amount.toFixed(2)}</Text>
-          <Text style={typography.meta}>ID: {item.id.slice(0, 8)}</Text>
-        </View>
-
-        <View style={tableStyles.cell}>
-          <View
-            style={[
-              badgeStyles.base,
-              isSuccess
-                ? badgeStyles.success
-                : isPending
-                ? badgeStyles.pending
-                : badgeStyles.failed,
-            ]}
-          >
-            <Text
-              style={
-                isSuccess
-                  ? badgeStyles.textSuccess
-                  : isPending
-                  ? badgeStyles.textPending
-                  : badgeStyles.textFailed
-              }
-            >
-              {item.status}
-            </Text>
-          </View>
-        </View>
-
-        <View style={tableStyles.cell}>
-          <Text style={typography.meta}>{formatTime(item.createdAt)}</Text>
-        </View>
-      </View>
-    );
-  }, []);
-
   return (
     <View style={commonStyles.container}>
-      <StatusBar hidden/>
+      <StatusBar hidden />
       <AddTransactionModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
@@ -112,7 +71,7 @@ export const HomeScreen = () => {
       <FlatList
         data={transactions}
         keyExtractor={item => item.id}
-        renderItem={renderItem}
+        renderItem={({ item }) => <TransactionRow item={item} />}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
@@ -125,6 +84,8 @@ export const HomeScreen = () => {
         maxToRenderPerBatch={10}
         windowSize={7}
         removeClippedSubviews
+        onEndReached={loadNextPage}
+        onEndReachedThreshold={0.7}
       />
     </View>
   );
