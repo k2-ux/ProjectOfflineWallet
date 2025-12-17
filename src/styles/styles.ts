@@ -8,7 +8,7 @@ export const colors = {
   textMuted: '#64748B',
   success: '#16A34A',
   error: '#DC2626',
-  border: '#E2E8F0',
+  border: '#314968ff',
 };
 
 export const fonts = {
@@ -81,9 +81,9 @@ export const commonStyles = StyleSheet.create({
   },
   title: {
     marginBottom: 8,
-    color:"black",
+    color: "black",
     fontFamily: fonts.bold,
-    fontSize:20
+    fontSize: 20
   },
   rowText: {
     ...typography.body,
@@ -96,6 +96,20 @@ export const commonStyles = StyleSheet.create({
     padding: 10,
     marginTop: 6,
     marginBottom: 8,
+  },
+  centeredContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+    backgroundColor: colors.background,
+
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
   },
 });
 
@@ -113,6 +127,18 @@ export const buttonStyles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 15,
     fontWeight: '600',
+  },
+  secondary: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#CBD5E1',
+  },
+  secondaryText: {
+    fontSize: 13,
+    fontFamily: 'SourceSans3-Medium',
+    color: '#334155',
   },
 });
 

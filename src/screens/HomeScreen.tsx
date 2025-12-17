@@ -24,6 +24,7 @@ import TransactionRow from '../components/TransactionRow';
 import { loadNextPage } from '../services/transactionLoader';
 import NetworkStatusBanner from '../components/NetworkStatusBanner';
 import SyncStatusBanner from '../components/SyncStatusBanner';
+import { logoutUser } from '../services/authService';
 
 export const HomeScreen = () => {
   const transactions = useSelector(
@@ -57,7 +58,17 @@ export const HomeScreen = () => {
       <NetworkStatusBanner />
       <SyncStatusBanner />
 
-      <Text style={commonStyles.title}>Wallet Home</Text>
+      <View style={commonStyles.header}>
+        <Text style={commonStyles.title}>Wallet Home</Text>
+
+        <TouchableOpacity
+          onPress={logoutUser}
+          style={buttonStyles.secondary}
+          activeOpacity={0.8}
+        >
+          <Text style={buttonStyles.secondaryText}>Logout</Text>
+        </TouchableOpacity>
+      </View>
 
       <TouchableOpacity
         style={buttonStyles.primary}
