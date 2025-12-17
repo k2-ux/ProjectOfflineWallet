@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 export const colors = {
   primary: '#0b53c7ff',
-  background: '#b8e8e49b',
+  background: '#89e6de9b',
   card: '#000000ff',
   textPrimary: '#0F172A',
   textMuted: '#64748B',
@@ -81,6 +81,9 @@ export const commonStyles = StyleSheet.create({
   },
   title: {
     marginBottom: 8,
+    color:"black",
+    fontFamily: fonts.bold,
+    fontSize:20
   },
   rowText: {
     ...typography.body,
@@ -123,10 +126,10 @@ export const tableStyles = StyleSheet.create({
     marginBottom: 4,
   },
   headerText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#748193ff',
+    fontSize: 14,
+    color: '#121213ff',
     flex: 1,
+    fontFamily: fonts.bold,
   },
   row: {
     flexDirection: 'row',
