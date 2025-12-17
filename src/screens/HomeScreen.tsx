@@ -22,6 +22,8 @@ import {
 import { formatTime } from '../utils/funtions';
 import TransactionRow from '../components/TransactionRow';
 import { loadNextPage } from '../services/transactionLoader';
+import NetworkStatusBanner from '../components/NetworkStatusBanner';
+import SyncStatusBanner from '../components/SyncStatusBanner';
 
 export const HomeScreen = () => {
   const transactions = useSelector(
@@ -52,6 +54,8 @@ export const HomeScreen = () => {
       <View style={commonStyles.card}>
         <DeviceInfoSection refreshKey={refreshKey} />
       </View>
+      <NetworkStatusBanner />
+      <SyncStatusBanner />
 
       <Text style={commonStyles.title}>Wallet Home</Text>
 

@@ -219,3 +219,60 @@ export const modalStyles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 });
+
+
+
+export const networkStyles = StyleSheet.create({
+  onlineBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: '#E6F9EE',
+    marginBottom: 8,
+  },
+  offlineBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: '#FDECEC',
+    marginBottom: 8,
+  },
+  text: {
+    marginLeft: 8,
+    fontSize: 13,
+    fontFamily: 'SourceSans3-Medium',
+    color: '#1F2937',
+  },
+  greenDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#16A34A',
+  },
+  redDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#DC2626',
+  },
+})
+
+
+export const syncStyles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: '#EFF6FF',
+    marginBottom: 8,
+  },
+  text: {
+    marginLeft: 8,
+    fontSize: 13,
+    fontFamily: 'SourceSans3-Medium',
+    color: '#1E3A8A',
+  },
+});
