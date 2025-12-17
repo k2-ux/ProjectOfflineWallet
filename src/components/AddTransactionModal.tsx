@@ -1,17 +1,12 @@
 import React, { useState } from 'react';
-import {
-  Modal,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-} from 'react-native';
+import { Modal, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { createPayment } from '../services/paymentService';
 import {
   commonStyles,
   buttonStyles,
   typography,
   colors,
+  modalStyles,
 } from '../styles/styles';
 
 type Props = {
@@ -39,15 +34,8 @@ const AddTransactionModal = ({ visible, onClose }: Props) => {
 
   return (
     <Modal visible={visible} transparent animationType="slide">
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: 'rgba(0,0,0,0.3)',
-          justifyContent: 'center',
-          padding: 16,
-        }}
-      >
-        <View style={commonStyles.card}>
+      <View style={modalStyles.modalBackground}>
+        <View style={modalStyles.modalContainer}>
           <Text style={typography.h1}>New Transaction</Text>
 
           <Text style={typography.label}>Amount (₹)</Text>
@@ -56,36 +44,21 @@ const AddTransactionModal = ({ visible, onClose }: Props) => {
             onChangeText={setAmount}
             keyboardType="numeric"
             placeholder="Enter amount"
-            style={{
-              borderWidth: 1,
-              borderColor: colors.border,
-              borderRadius: 6,
-              padding: 10,
-              marginTop: 6,
-              marginBottom: 8,
-            }}
+            style={commonStyles.input}
           />
 
-          {error ? (
-            <Text style={{ color: colors.error }}>{error}</Text>
-          ) : null}
+          {error ? <Text style={{ color: colors.error }}>{error}</Text> : null}
 
-          <TouchableOpacity
-            style={buttonStyles.primary}
-            onPress={onSubmit}
-          >
-            <Text style={buttonStyles.primaryText}>
-              Create Transaction
-            </Text>
+          <TouchableOpacity style={buttonStyles.primary} onPress={onSubmit}>
+            <Text style={buttonStyles.primaryText}>Create Transaction</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={onClose}>
             <Text
-              style={{
-                textAlign: 'center',
-                marginTop: 8,
-                color: colors.textMuted,
-              }}
+              style={[
+                typography.body,
+                { textAlign: 'center', marginTop: 8, color: colors.textMuted },
+              ]}
             >
               Cancel
             </Text>

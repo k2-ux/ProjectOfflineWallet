@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native';
 export const colors = {
   primary: '#0b53c7ff',
   background: '#b8e8e49b',
-  card: '#050505ff',
+  card: '#000000ff',
   textPrimary: '#0F172A',
   textMuted: '#64748B',
   success: '#16A34A',
@@ -97,6 +97,14 @@ export const commonStyles = StyleSheet.create({
     ...typography.body,
     marginTop: 6,
   },
+  input: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 6,
+    padding: 10,
+    marginTop: 6,
+    marginBottom: 8,
+  },
 });
 
 /* ---------- Buttons ---------- */
@@ -122,7 +130,7 @@ export const tableStyles = StyleSheet.create({
   headerRow: {
     flexDirection: 'row',
     paddingVertical: 8,
-    paddingHorizontal:8,
+    paddingHorizontal: 8,
     borderBottomWidth: 1,
     borderColor: '#E2E8F0',
     marginBottom: 4,
@@ -138,8 +146,8 @@ export const tableStyles = StyleSheet.create({
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderColor: '#83898f84',
-    backgroundColor:'white',
-    paddingHorizontal:8,
+    backgroundColor: 'white',
+    paddingHorizontal: 8,
   },
   cell: {
     flex: 1,
@@ -186,16 +194,38 @@ export const deviceInfoStyles = StyleSheet.create({
   container: {
     backgroundColor: '#FFFFFF',
     padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
   },
   label: {
     fontSize: 12,
     color: '#64748B',
     marginBottom: 2,
+    fontFamily: fonts.regular,
   },
   value: {
     fontSize: 14,
-    fontWeight: '600',
+
     color: '#0F172A',
     marginBottom: 6,
+    fontFamily: fonts.bold,
+  },
+});
+export const modalStyles = StyleSheet.create({
+  modalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(16, 16, 16, 0.38)',
+    justifyContent: 'center',
+    padding: 16,
+  },
+
+  modalContainer: {
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.border,
+    marginBottom: 12,
+    backgroundColor: '#fff',
   },
 });

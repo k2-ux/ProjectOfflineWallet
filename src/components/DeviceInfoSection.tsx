@@ -22,13 +22,16 @@ const DeviceInfoSection = ({ refreshKey }: Props) => {
 
   return (
     <View style={deviceInfoStyles.container}>
-      <Text style={typography.label}>Battery</Text>
-      <Text style={typography.body}>
-        {battery !== null ? `${battery}%` : '--'}
-      </Text>
-
-      <Text style={typography.label}>Network</Text>
-      <Text style={typography.body}>{network}</Text>
+      <View>
+        <Text style={deviceInfoStyles.label}>Battery</Text>
+        <Text style={deviceInfoStyles.value}>
+          {battery !== null ? `${battery}%` : '--'}
+        </Text>
+      </View>
+      <View>
+        <Text style={deviceInfoStyles.label}>Network</Text>
+        <Text style={deviceInfoStyles.value}>{network}</Text>
+      </View>
     </View>
   );
 };
