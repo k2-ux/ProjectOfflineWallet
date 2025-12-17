@@ -20,7 +20,6 @@ class ErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, info: any) {
-    // In real apps, log to Crashlytics / Sentry
     console.log('ErrorBoundary caught:', error, info);
   }
 

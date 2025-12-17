@@ -9,7 +9,7 @@ export const useAutoSync = () => {
   const syncingRef = useRef(false);
 
   const runSync = async () => {
-    if (syncingRef.current) return; // 🔒 prevent overlap
+    if (syncingRef.current) return;
 
     syncingRef.current = true;
     store.dispatch(setSyncing(true));
@@ -23,17 +23,14 @@ export const useAutoSync = () => {
   };
 
   useEffect(() => {
-    // Initial attempt
     runSync();
 
-    // Network-based trigger
     const unsubscribeNet = NetInfo.addEventListener(state => {
       if (state.isConnected) {
         runSync();
       }
     });
 
-    // App foreground trigger
     const subApp = AppState.addEventListener('change', state => {
       if (state === 'active') {
         runSync();

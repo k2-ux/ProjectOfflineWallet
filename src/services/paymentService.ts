@@ -7,9 +7,7 @@ import { store } from '../store';
 import { addTransaction } from '../store/transactionSlice';
 import { DeviceInfoNative } from '../native/DeviceInfoNative';
 
-/**
- * Create a new payment (offline-safe)
- */
+
 export const createPayment = async (amount: number) => {
   const now = Date.now();
 
@@ -22,30 +20,22 @@ export const createPayment = async (amount: number) => {
     updatedAt: now,
   };
 
-  // 1️⃣ Persist user intent
   await insertTransaction(transaction);
 
-  // 2️⃣ Mirror to Redux
   store.dispatch(addTransaction(transaction));
 
-  // 3️⃣ System responsibility begins
   await updateStatus(transaction.id, 'PENDING');
 
-  // 4️⃣ Fire-and-forget
   processPayment(transaction.id, amount);
 
   return transaction.id;
 };
 
-/**
- * Process / retry payment
- */
+
 export const processPayment = async (transactionId: string, amount: number) => {
-  // 🔒 Explicit network gate (mock-safe)
   const networkType = await DeviceInfoNative.getNetworkType();
 
   if (networkType === 'NONE') {
-    // Offline → do NOT call API
     await updateStatus(transactionId, 'PENDING');
     return;
   }
@@ -60,7 +50,6 @@ export const processPayment = async (transactionId: string, amount: number) => {
       await incrementRetry(transactionId);
     }
   } catch (err) {
-    // Network / unexpected failure
     await updateStatus(transactionId, 'PENDING');
     await incrementRetry(transactionId);
   }

@@ -6,11 +6,7 @@ import {
   incrementRetry as incrementRetryRedux,
 } from '../store/transactionSlice';
 
-/**
- * Update transaction status in BOTH:
- * 1. SQLite (source of truth)
- * 2. Redux (UI cache)
- */
+
 export const updateStatus = async (
   id: string,
   status: TransactionStatus,
@@ -18,7 +14,6 @@ export const updateStatus = async (
   const updatedAt = Date.now();
   const db = await getDB();
 
-  // 1️⃣ Update SQLite
   await db.executeSql(
     `UPDATE transactions
      SET status = ?, updatedAt = ?
@@ -26,7 +21,6 @@ export const updateStatus = async (
     [status, updatedAt, id],
   );
 
-  // 2️⃣ Update Redux immediately
   store.dispatch(
     updateTransaction({
       id,
@@ -36,14 +30,11 @@ export const updateStatus = async (
   );
 };
 
-/**
- * Increment retry count in BOTH SQLite & Redux
- */
+
 export const incrementRetry = async (id: string) => {
   const updatedAt = Date.now();
   const db = await getDB();
 
-  // 1️⃣ Update SQLite
   await db.executeSql(
     `UPDATE transactions
      SET retryCount = retryCount + 1,
@@ -52,7 +43,6 @@ export const incrementRetry = async (id: string) => {
     [updatedAt, id],
   );
 
-  // 2️⃣ Update Redux
   store.dispatch(
     incrementRetryRedux({
       id,

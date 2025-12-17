@@ -53,7 +53,6 @@ export const getPendingTransactions = async () => {
   return list;
 };
 
-// transactionDB.ts
 export const getTransactionsPage = async (
   limit: number,
   offset: number,

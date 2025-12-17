@@ -145,7 +145,6 @@ export const tableStyles = StyleSheet.create({
   },
 });
 
-/* ---------- Status Badges ---------- */
 export const badgeStyles = StyleSheet.create({
   base: {
     alignSelf: 'flex-start',
@@ -179,7 +178,6 @@ export const badgeStyles = StyleSheet.create({
   },
 });
 
-/* ---------- Device Info ---------- */
 export const deviceInfoStyles = StyleSheet.create({
   container: {
     backgroundColor: '#FFFFFF',

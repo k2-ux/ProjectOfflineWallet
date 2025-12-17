@@ -28,24 +28,18 @@ const transactionsSlice = createSlice({
   name: 'transactions',
   initialState,
   reducers: {
-    /**
-     * Used ONLY at app bootstrap (first page)
-     */
+
     setTransactions(state, action: PayloadAction<Transaction[]>) {
       state.list = action.payload;
-      state.hasMore = action.payload.length > 0; // ✅ reset pagination
+      state.hasMore = action.payload.length > 0;
     },
 
-    /**
-     * Add new transaction (INITIATED)
-     */
+
     addTransaction(state, action: PayloadAction<Transaction>) {
       state.list.unshift(action.payload);
     },
 
-    /**
-     * Patch transaction fields safely
-     */
+
     updateTransaction(state, action: PayloadAction<UpdateTransactionPayload>) {
       const tx = state.list.find(t => t.id === action.payload.id);
       if (!tx) return;
@@ -58,9 +52,7 @@ const transactionsSlice = createSlice({
       }
     },
 
-    /**
-     * Increment retry count
-     */
+
     incrementRetry(state, action: PayloadAction<IncrementRetryPayload>) {
       const tx = state.list.find(t => t.id === action.payload.id);
       if (!tx) return;
@@ -69,9 +61,7 @@ const transactionsSlice = createSlice({
       tx.updatedAt = action.payload.updatedAt;
     },
 
-    /**
-     * Pagination-safe append with de-duplication
-     */
+
     appendTransactions(state, action: PayloadAction<Transaction[]>) {
       const existingIds = new Set(state.list.map(t => t.id));
 

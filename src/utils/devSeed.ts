@@ -4,9 +4,9 @@ import { Transaction } from './types';
 
 let seeded = false;
 
-/**
- * DEV ONLY: Seed large transaction dataset
- */
+
+//  DEV ONLY: Seed large transaction dataset
+
 export const seedTransactionsIfNeeded = async () => {
   if (!__DEV__ || seeded) return;
 
@@ -27,5 +27,5 @@ export const seedTransactionsIfNeeded = async () => {
     await insertTransaction(tx);
   }
 
-  console.log('✅ Seeded 5000 transactions');
+  console.log('Seeded 5000 transactions');
 };
