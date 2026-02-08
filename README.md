@@ -5,6 +5,22 @@ A mini offline-first wallet application built using React Native CLI (TypeScript
 This project focuses on architecture, reliability, and edge-case handling rather than UI design.
 It simulates a real-world payment flow with offline support, background sync, and idempotent retries.
 
+## How to install
+
+Step 1: Open this file
+node_modules/react-native-sqlite-storage/platforms/android/build.gradle
+
+Step 2: You’ll see something like this (around line 4)
+repositories {
+jcenter()
+}
+
+Step 3: Replace it with
+repositories {
+mavenCentral()
+google()
+}
+
 ## Features Overview
 
 Offline-first payment creation
@@ -44,8 +60,6 @@ Key Principle
 SQLite is the single source of truth.
 Redux mirrors database state for fast rendering, but never replaces it.
 
-
-
 1. Project Structure
 
 The project is organized by responsibility, not by feature or UI screens alone.
@@ -69,7 +83,7 @@ native: exposes a custom Android native module for battery and network informati
 utils
 
 2.  Transaction Engine
-Transaction States
+    Transaction States
 
 Each transaction follows a deliberate state machine:
 
@@ -77,14 +91,13 @@ INITIATED => user intent captured
 
 PENDING => system has started processing
 
-SUCCESS  => payment confirmed
+SUCCESS => payment confirmed
 
-FAILED  => processing failed
+FAILED => processing failed
 
-FAILED  => PENDING =>retry when conditions improve
+FAILED => PENDING =>retry when conditions improve
 
-
-##  Authentication & App State
+## Authentication & App State
 
 Authentication is handled using a mock login API with tokens stored securely using the Android Keystore (via react-native-keychain).Login is only allowed when network connectivity is available. Auth tokens are validated during app bootstrap.
 
@@ -95,10 +108,9 @@ AsyncStorage is intentionally avoided for auth data due to security concerns.
 
 A logout action clears secure auth data and resets application state.
 
-
 # Offline-First & Auto-Sync Logic
 
-** Source of Truth
+\*\* Source of Truth
 
 i. All transactions are written to SQLite first, before any network call is made.
 
@@ -107,7 +119,7 @@ iii. the network layer is only responsible for confirming or updating the state 
 
 This ensures that user actions are always preserved, regardless of connectivity or app lifecycle interruptions.
 
-**When Sync Runs
+\*\*When Sync Runs
 
 The auto-sync engine is designed to run automatically at safe lifecycle moments:
 
@@ -119,7 +131,7 @@ iii. When network connectivity becomes available
 
 iv. This avoids relying on manual user actions while also preventing unnecessary background work.
 
-**Sync Strategy
+\*\*Sync Strategy
 
 During sync, the app queries SQLite for transactions that meet the following conditions:
 
@@ -137,8 +149,7 @@ ii. The status is updated based on the response
 
 iii. If a network error occurs, the sync stops safely and will resume later
 
-
-**This approach guarantees that:
+\*\*This approach guarantees that:
 
 i. No payments are lost
 
@@ -148,7 +159,7 @@ iii. Retries are controlled and predictable
 
 iv. Network instability does not corrupt state
 
-**Each transaction:
+\*\*Each transaction:
 
 i. Uses a client-generated UUID
 
@@ -157,7 +168,7 @@ ii. Is retried using the same ID
 iii. Never creates a new record during retry
 iv.The mock backend treats repeated requests with the same ID as safe replays, ensuring idempotency and preventing duplicate processing.
 
- ** Performance Considerations :
+\*\* Performance Considerations :
 
 i.SQLite pagination prevents large memory loads
 

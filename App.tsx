@@ -8,8 +8,8 @@ import ErrorBoundary from './src/components/ErrorBoundary';
 import { seedTransactionsIfNeeded } from './src/utils/devSeed';
 import { loadInitialPage } from './src/services/transactionLoader';
 import { bootstrapAuth } from './src/services/authBootstrap';
-import LoginScreen from './src/screens/LoginScreen';
-import { HomeScreen } from './src/screens/HomeScreen';
+
+import RootNavigator from './src/navigation/RootNavigator';
 
 const AppContent = () => {
   useAutoSync();
@@ -22,13 +22,12 @@ const AppContent = () => {
     const bootstrap = async () => {
       await initDb();
       await bootstrapAuth();
-      await seedTransactionsIfNeeded();
+      // await seedTransactionsIfNeeded();
       await loadInitialPage();
     };
 
     bootstrap();
   }, []);
-
 
   if (!initialized) {
     return null;
@@ -36,10 +35,10 @@ const AppContent = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      {isAuthenticated ? <HomeScreen /> : <LoginScreen />}
+      <RootNavigator />
     </View>
-  );;
-}
+  );
+};
 const App = () => {
   return (
     <ErrorBoundary>
@@ -49,6 +48,5 @@ const App = () => {
     </ErrorBoundary>
   );
 };
-
 
 export default App;

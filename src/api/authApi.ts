@@ -1,15 +1,15 @@
-import { AuthToken } from '../utils/authTypes';
+import { http } from './httpClient';
 
-export const loginApi = async (
-    username: string,
-    password: string,
-): Promise<AuthToken> => {
-    await new Promise<void>(resolve => {
-        setTimeout(resolve, 800);
-    });
+export const loginApi = async (email: string, password: string) => {
+  return http('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({ email, password }),
+  });
+};
 
-    return {
-        token: 'mock-jwt-token-' + Date.now(),
-        expiresAt: Date.now() + 60 * 60 * 1000,
-    };
+export const registerApi = async (email: string, password: string) => {
+  return http('/auth/register', {
+    method: 'POST',
+    body: JSON.stringify({ email, password }),
+  });
 };

@@ -1,36 +1,20 @@
-type PayRequest = {
+import { http } from './httpClient';
+
+type PayArgs = {
   transactionId: string;
   amount: number;
 };
 
-type PayResponse = {
-  success: boolean;
+export const payApi = async ({ transactionId, amount }: PayArgs) => {
+  return http('/payments', {
+    method: 'POST',
+    body: JSON.stringify({
+      transactionId,
+      amount,
+    }),
+  });
 };
 
-const processedTransactions = new Set<string>();
-
-export const payApi = async (
-  req: PayRequest,
-): Promise<PayResponse> => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (Math.random() < 0.2) {
-        reject(new Error('Network error'));
-        return;
-      }
-
-      if (processedTransactions.has(req.transactionId)) {
-        resolve({ success: true });
-        return;
-      }
-
-      if (Math.random() < 0.2) {
-        resolve({ success: false });
-        return;
-      }
-
-      processedTransactions.add(req.transactionId);
-      resolve({ success: true });
-    }, 1000);
-  });
+export const getPaymentStatus = async (transactionId: string) => {
+  return http(`/payments/${transactionId}`);
 };

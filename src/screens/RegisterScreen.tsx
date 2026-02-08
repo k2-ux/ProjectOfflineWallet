@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../navigation/AuthStack';
-import { login } from '../services/authService';
+import { register } from '../services/authService';
 import { isValidEmail } from '../utils/validators';
 import { styles } from '../styles/AuthStyles';
 
-type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
+type Props = NativeStackScreenProps<AuthStackParamList, 'Register'>;
 
-const LoginScreen = ({ navigation }: Props) => {
+const RegisterScreen = ({ navigation }: Props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const onLogin = async () => {
+  const onRegister = async () => {
     if (!email || !password) {
       Alert.alert('Missing fields', 'Email and password are required.');
       return;
@@ -24,13 +24,21 @@ const LoginScreen = ({ navigation }: Props) => {
       return;
     }
 
+    if (password.length < 6) {
+      Alert.alert(
+        'Weak password',
+        'Password must be at least 6 characters long.',
+      );
+      return;
+    }
+
     try {
       setLoading(true);
-      await login(email, password);
+      await register(email, password);
     } catch (err: any) {
       Alert.alert(
-        'Login failed',
-        err?.message || 'Something went wrong. Please try again.',
+        'Registration failed',
+        err?.message || 'Unable to register. Please try again.',
       );
     } finally {
       setLoading(false);
@@ -40,7 +48,7 @@ const LoginScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <Text style={styles.title}>Welcome Back</Text>
+        <Text style={styles.title}>Create Account</Text>
 
         <TextInput
           placeholder="Email"
@@ -61,20 +69,20 @@ const LoginScreen = ({ navigation }: Props) => {
 
         <TouchableOpacity
           style={styles.primaryButton}
-          onPress={onLogin}
+          onPress={onRegister}
           disabled={loading}
         >
           <Text style={styles.primaryText}>
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? 'Registering...' : 'Register'}
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-          <Text style={styles.linkText}>Don’t have an account? Register</Text>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text style={styles.linkText}>Back to Login</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
 
-export default LoginScreen;
+export default RegisterScreen;
