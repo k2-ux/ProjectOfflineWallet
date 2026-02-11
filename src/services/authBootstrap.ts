@@ -1,16 +1,34 @@
-
-import { getAuthToken, clearAuthToken } from '../storage/authStorage';
+import { jwtDecode } from 'jwt-decode';
+import { getTokens } from '../storage/secureAuth';
 import { store } from '../store';
 import { loginSuccess, logout, markInitialized } from '../store/authSlice';
 
-export const bootstrapAuth = async () => {
-    const auth = await getAuthToken();
+type JwtPayload = {
+  role: 'ADMIN' | 'SUPERVISOR' | 'OPERATOR' | 'VIEWER';
+  exp: number;
+};
 
-    if (!auth || auth.expiresAt < Date.now()) {
-        await clearAuthToken();
-        store.dispatch(logout());
-        return;
+export const bootstrapAuth = async () => {
+  try {
+    const tokens = await getTokens();
+
+    if (!tokens?.accessToken) {
+      store.dispatch(logout());
+      return;
     }
 
-    store.dispatch(loginSuccess());
+    const decoded = jwtDecode<JwtPayload>(tokens.accessToken);
+
+    if (!decoded?.role || decoded.exp * 1000 < Date.now()) {
+      store.dispatch(logout());
+      return;
+    }
+
+    store.dispatch(loginSuccess({ role: decoded.role }));
+  } catch (e) {
+    store.dispatch(logout());
+  } finally {
+    // 🔒 GUARANTEE INITIALIZATION
+    store.dispatch(markInitialized());
+  }
 };

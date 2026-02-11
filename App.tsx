@@ -14,15 +14,12 @@ import RootNavigator from './src/navigation/RootNavigator';
 const AppContent = () => {
   useAutoSync();
 
-  const { isAuthenticated, initialized } = useSelector(
-    (state: RootState) => state.auth,
-  );
+  const { initialized } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     const bootstrap = async () => {
       await initDb();
       await bootstrapAuth();
-      // await seedTransactionsIfNeeded();
       await loadInitialPage();
     };
 
@@ -30,7 +27,7 @@ const AppContent = () => {
   }, []);
 
   if (!initialized) {
-    return null;
+    return null; // splash / loader later
   }
 
   return (
@@ -39,6 +36,7 @@ const AppContent = () => {
     </View>
   );
 };
+
 const App = () => {
   return (
     <ErrorBoundary>

@@ -7,7 +7,6 @@ import { store } from '../store';
 import { addTransaction } from '../store/transactionSlice';
 import { DeviceInfoNative } from '../native/DeviceInfoNative';
 
-
 export const createPayment = async (amount: number) => {
   const now = Date.now();
 
@@ -31,7 +30,6 @@ export const createPayment = async (amount: number) => {
   return transaction.id;
 };
 
-
 export const processPayment = async (transactionId: string, amount: number) => {
   const networkType = await DeviceInfoNative.getNetworkType();
 
@@ -43,11 +41,18 @@ export const processPayment = async (transactionId: string, amount: number) => {
   try {
     const res = await payApi({ transactionId, amount });
 
-    if (res.success) {
+    const status = String(res.status).trim().toUpperCase();
+
+    console.log('Normalized Status:', status);
+
+    if (status === 'SUCCESS') {
       await updateStatus(transactionId, 'SUCCESS');
-    } else {
+    } else if (status === 'FAILED') {
       await updateStatus(transactionId, 'FAILED');
       await incrementRetry(transactionId);
+    } else {
+      // unexpected status → do nothing
+      console.log('Unknown status from backend:', res.status);
     }
   } catch (err) {
     await updateStatus(transactionId, 'PENDING');

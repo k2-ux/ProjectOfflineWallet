@@ -1,27 +1,27 @@
 import { loginApi, registerApi } from '../api/authApi';
 import { saveAuthToken, clearAuthToken } from '../storage/authStorage';
+import { saveTokens } from '../storage/secureAuth';
 import { store } from '../store';
 import { loginSuccess, logout } from '../store/authSlice';
 import NetInfo from '@react-native-community/netinfo';
+import { jwtDecode } from 'jwt-decode';
 
-export const login = async (username: string, password: string) => {
-  const netState = await NetInfo.fetch();
-
-  if (!netState.isConnected) {
-    throw new Error('No internet connection');
-  }
-
-  const auth = await loginApi(username, password);
-  await saveAuthToken(auth);
-  store.dispatch(loginSuccess());
+type JwtPayload = {
+  role: 'ADMIN' | 'SUPERVISOR' | 'OPERATOR' | 'VIEWER';
 };
 
+export const login = async (email: string, password: string) => {
+  const res = await loginApi(email, password);
+
+  const { accessToken, refreshToken } = res;
+
+  await saveTokens(accessToken, refreshToken);
+
+  const decoded = jwtDecode<JwtPayload>(accessToken);
+
+  store.dispatch(loginSuccess({ role: decoded.role }));
+};
 export const logoutUser = async () => {
   await clearAuthToken();
   store.dispatch(logout());
-};
-export const register = async (email: string, password: string) => {
-  const auth = await registerApi(email, password);
-  await saveAuthToken(auth);
-  store.dispatch(loginSuccess());
 };

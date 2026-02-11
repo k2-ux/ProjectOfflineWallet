@@ -16,6 +16,8 @@ export const syncPendingPayments = async () => {
     const pending = await getPendingTransactions();
 
     for (const tx of pending) {
+      console.log('SYNCING PAYMENT', tx.id);
+
       await processPayment(tx.id, tx.amount);
     }
   } finally {

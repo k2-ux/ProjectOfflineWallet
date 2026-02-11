@@ -13,3 +13,10 @@ export const registerApi = async (email: string, password: string) => {
     body: JSON.stringify({ email, password }),
   });
 };
+
+export const refreshTokenApi = async (refreshToken: string) => {
+  return http('/auth/refresh', {
+    method: 'POST',
+    body: JSON.stringify({ refreshToken }),
+  });
+};

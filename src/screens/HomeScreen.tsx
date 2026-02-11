@@ -25,8 +25,12 @@ import { loadNextPage } from '../services/transactionLoader';
 import NetworkStatusBanner from '../components/NetworkStatusBanner';
 import SyncStatusBanner from '../components/SyncStatusBanner';
 import { logoutUser } from '../services/authService';
-
+import AdminStatsSection from '../screens/AdminStatsSection';
 export const HomeScreen = () => {
+  const role = useSelector((state: RootState) => state.auth.role);
+
+  const isAdmin = role === 'ADMIN' || role === 'SUPERVISOR';
+
   const transactions = useSelector(
     (state: RootState) => state.transactions.list,
   );
@@ -34,7 +38,7 @@ export const HomeScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
-
+  const [adminStats, setAdminStats] = useState<any>(null);
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setRefreshKey(prev => prev + 1);
@@ -76,6 +80,7 @@ export const HomeScreen = () => {
       >
         <Text style={buttonStyles.primaryText}>Add Transaction</Text>
       </TouchableOpacity>
+      {isAdmin && <AdminStatsSection />}
 
       <View style={tableStyles.headerRow}>
         <Text style={tableStyles.headerText}>AMOUNT / ID</Text>
