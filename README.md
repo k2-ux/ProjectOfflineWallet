@@ -3,25 +3,11 @@ Offline Wallet App (React Native CLI)
 A mini offline-first wallet application built using React Native CLI (TypeScript) for Android.
 
 This project focuses on architecture, reliability, and edge-case handling rather than UI design.
-It simulates a real-world payment flow with offline support, background sync, and idempotent retries.
+It simulates a real-world payment flow with offline support, background sync, idempotent retries, and secure authentication.
 
-## How to install
-
-Step 1: Open this file
-node_modules/react-native-sqlite-storage/platforms/android/build.gradle
-
-Step 2: You’ll see something like this (around line 4)
-repositories {
-jcenter()
-}
-
-Step 3: Replace it with
-repositories {
-mavenCentral()
-google()
-}
-
-## Features Overview
+📱 Screenshots
+<p align="center"> <img src="https://github.com/user-attachments/assets/b67d613f-d42a-4226-9d7b-332df45687ed" width="300"/> <img src="https://github.com/user-attachments/assets/53913e5c-7894-45e1-9ed8-a833d38454ee" width="300"/> <img src="https://github.com/user-attachments/assets/b92a7ffa-f421-4584-8e9a-d8eab339f6c7" width="300"/> </p>
+🚀 Features Overview
 
 Offline-first payment creation
 
@@ -31,7 +17,7 @@ Idempotent payment retries (no duplicate transactions)
 
 Automatic background sync on network availability
 
-Secure authentication design (no AsyncStorage for tokens)
+Secure authentication (no AsyncStorage for tokens)
 
 High-performance transaction list (5,000+ items)
 
@@ -39,9 +25,32 @@ Custom Android native module (battery & network info)
 
 Global error handling
 
-## Architecture Overview
+🛠 Installation (Important Fix)
 
-The app is structured using clear separation of concerns:
+If build fails due to jcenter() issue:
+
+Open:
+
+node_modules/react-native-sqlite-storage/platforms/android/build.gradle
+
+
+Replace:
+
+repositories {
+    jcenter()
+}
+
+
+With:
+
+repositories {
+    mavenCentral()
+    google()
+}
+
+🏗 Architecture Overview
+
+The app follows clear separation of concerns:
 
 UI (Screens / Components)
 
@@ -58,172 +67,176 @@ Native (Android System APIs)
 Key Principle
 
 SQLite is the single source of truth.
-Redux mirrors database state for fast rendering, but never replaces it.
+Redux mirrors database state for fast rendering but never replaces it.
 
-1. Project Structure
+📂 Project Structure (Simplified)
 
-The project is organized by responsibility, not by feature or UI screens alone.
+The project is organized by responsibility:
 
-api: contains mock backend APIs used to simulate payment processing.
+api/ → Backend API calls
 
-storage :handles all local persistence, including SQLite initialization and queries. This layer owns data durability.
+storage/ → SQLite initialization & queries
 
-store: contains Redux slices used purely as a UI cache. Redux does not persist data.
+store/ → Redux slices (UI cache only)
 
-services: implements core business logic such as payment creation, retries, and background sync.
+services/ → Payment engine & sync logic
 
-hooks: encapsulates lifecycle-driven logic like auto-sync, network awareness, and app foreground handling.
+hooks/ → Lifecycle & connectivity logic
 
-screens: contain top-level app screens.
+screens/ → Top-level app screens
 
-components: contain reusable UI components such as status banners and list rows.
+components/ → Reusable UI components
 
-native: exposes a custom Android native module for battery and network information.
+native/ → Android native module bridge
 
-utils
+utils/ → Types & helpers
 
-2.  Transaction Engine
-    Transaction States
+🔁 Transaction Engine
 
 Each transaction follows a deliberate state machine:
 
-INITIATED => user intent captured
+INITIATED → PENDING → SUCCESS
+                    → FAILED
+FAILED → PENDING (retry)
 
-PENDING => system has started processing
+Why INITIATED exists
 
-SUCCESS => payment confirmed
+User intent is persisted to SQLite before any network call.
+This guarantees safety if the app is killed or the device goes offline mid-action.
 
-FAILED => processing failed
+🔐 Authentication & App State
 
-FAILED => PENDING =>retry when conditions improve
+Secure token storage using Android Keystore (react-native-keychain)
 
-## Authentication & App State
+Login allowed only when network is available
 
-Authentication is handled using a mock login API with tokens stored securely using the Android Keystore (via react-native-keychain).Login is only allowed when network connectivity is available. Auth tokens are validated during app bootstrap.
+Token expiry validated during app bootstrap
 
-Tokens include an expiry timestamp and are validated during app bootstrap.  
-If a token is missing or expired, the user is logged out automatically.
+Automatic logout on invalid/expired token
 
-AsyncStorage is intentionally avoided for auth data due to security concerns.
+AsyncStorage intentionally avoided for auth data
 
-A logout action clears secure auth data and resets application state.
+🔄 Offline-First & Auto-Sync Logic
+Source of Truth
 
-# Offline-First & Auto-Sync Logic
+All transactions are written to SQLite first
 
-\*\* Source of Truth
+Network layer only confirms or updates state
 
-i. All transactions are written to SQLite first, before any network call is made.
+Backend never creates transaction IDs
 
-ii. SQLite is treated as the single source of truth.
-iii. the network layer is only responsible for confirming or updating the state of an existing transaction — it never creates new data.
+When Sync Runs
 
-This ensures that user actions are always preserved, regardless of connectivity or app lifecycle interruptions.
+Auto-sync triggers automatically:
 
-\*\*When Sync Runs
+On app launch
 
-The auto-sync engine is designed to run automatically at safe lifecycle moments:
+When app returns to foreground
 
-i. When the app launches
+When network becomes available
 
-ii. When the app returns to the foreground
+Sync Strategy
 
-iii. When network connectivity becomes available
+During sync:
 
-iv. This avoids relying on manual user actions while also preventing unnecessary background work.
+Query SQLite for:
 
-\*\*Sync Strategy
+Status = PENDING or FAILED
 
-During sync, the app queries SQLite for transactions that meet the following conditions:
+Retry count below limit
 
-i. Status is PENDING or FAILED
+Process sequentially (no parallel race conditions)
 
-ii. Retry count is below a defined limit
+Update status based on backend response
 
-iii.These transactions are then processed sequentially, not in parallel, to avoid race conditions.
+Stop safely on network failure
 
-For each transaction:
+Guarantees
 
-i. The API is called using the existing transaction ID
+No lost payments
 
-ii. The status is updated based on the response
+No duplicate transactions
 
-iii. If a network error occurs, the sync stops safely and will resume later
+Controlled retries
 
-\*\*This approach guarantees that:
+Safe recovery after crash
 
-i. No payments are lost
+Idempotency
 
-ii. Transactions are never duplicated
+Each transaction:
 
-iii. Retries are controlled and predictable
+Uses a client-generated UUID
 
-iv. Network instability does not corrupt state
+Reuses the same ID for retries
 
-\*\*Each transaction:
+Backend treats duplicate IDs as safe replays
 
-i. Uses a client-generated UUID
+⚡ Performance Considerations
 
-ii. Is retried using the same ID
+SQLite pagination prevents large memory loads
 
-iii. Never creates a new record during retry
-iv.The mock backend treats repeated requests with the same ID as safe replays, ensuring idempotency and preventing duplicate processing.
+Redux provides fast in-memory reads
 
-\*\* Performance Considerations :
+FlatList optimizations:
 
-i.SQLite pagination prevents large memory loads
+Windowing
 
-ii.Redux provides fast in-memory reads
+Memoized rows
 
-iii.FlatList optimizations:
+Controlled batch rendering
 
-windowing,memoized rows,controlled batch rendering
+Smooth scrolling tested with 5,000+ transactions.
 
-This allows smooth scrolling with 5,000+ transactions.
+📱 Android Native Module
 
-# Android Native Module
+Custom Android module (Kotlin) exposes:
 
-A custom Android native module (Kotlin) exposes:
+Battery percentage
 
-i.Battery percentage
+Network type (WiFi / Mobile / None)
 
-ii.Network type (WiFi / Mobile / None)
+Demonstrates:
 
-This demonstrates:
+Native-to-React Native bridging
 
-Native android to React Native bridging,Android system service usage,Manual ReactPackage registration
+Android system service usage
 
-# Error Handling
+Manual ReactPackage registration
 
-Global error boundary prevents app crashes
+🛡 Error Handling
 
-Graceful fallback UI in production
+Global error boundary
 
-No red-screen errors in release builds
+Graceful fallback UI
 
-# Tested Scenarios
+No red-screen crashes in release builds
+
+🧪 Tested Scenarios
 
 Create payments while offline
 
 Kill app during transaction
 
-Restart app and restore state
+Restart and restore state
 
 Auto-sync when network returns
 
 Retry failed payments safely
 
-Prevent duplicate payments
+Prevent duplicate processing
 
-# Why This Project
+🎯 Why This Project
 
 This repository demonstrates:
 
-Offline-first mobile design
+Offline-first mobile architecture
 
 State-machine driven transactions
 
-Reliable retry strategies
+Idempotent backend integration
 
-App lifecycle awareness
+Crash-safe persistence
 
-Production-oriented React Native architecture
+Lifecycle-aware synchronization
+
+Production-oriented React Native design
