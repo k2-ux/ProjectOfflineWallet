@@ -8,7 +8,10 @@ It simulates a real-world payment flow with offline support, background sync, id
 
 
 
-https://github.com/user-attachments/assets/25e27276-0f89-4548-a9df-9a18477142f4
+https://github.com/user-attachments/assets/d817696d-7840-4085-8cf4-73ba40911463
+
+
+
 
 
 📱 Screenshots
