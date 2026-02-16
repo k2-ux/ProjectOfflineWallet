@@ -5,6 +5,12 @@ A mini offline-first wallet application built using React Native CLI (TypeScript
 This project focuses on architecture, reliability, and edge-case handling rather than UI design.
 It simulates a real-world payment flow with offline support, background sync, idempotent retries, and secure authentication.
 
+
+
+
+https://github.com/user-attachments/assets/25e27276-0f89-4548-a9df-9a18477142f4
+
+
 📱 Screenshots
 <p align="center"> <img src="https://github.com/user-attachments/assets/b67d613f-d42a-4226-9d7b-332df45687ed" width="300"/> <img src="https://github.com/user-attachments/assets/53913e5c-7894-45e1-9ed8-a833d38454ee" width="300"/> <img src="https://github.com/user-attachments/assets/b92a7ffa-f421-4584-8e9a-d8eab339f6c7" width="300"/> </p>
 🚀 Features Overview
@@ -234,6 +240,11 @@ Offline-first mobile architecture
 State-machine driven transactions
 
 Idempotent backend integration
+
+
+
+
+
 
 Crash-safe persistence
 
