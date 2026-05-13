@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import { networkStyles } from '../styles/styles';
@@ -6,21 +6,23 @@ import { networkStyles } from '../styles/styles';
 const NetworkStatusBanner = () => {
     const [isConnected, setIsConnected] = useState<boolean | null>(null);
     const [justCameOnline, setJustCameOnline] = useState(false);
+    const prevConnected = useRef<boolean | null>(null);
 
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
             const connected = !!state.isConnected;
 
-            if (isConnected === false && connected === true) {
+            if (prevConnected.current === false && connected) {
                 setJustCameOnline(true);
                 setTimeout(() => setJustCameOnline(false), 2000);
             }
 
+            prevConnected.current = connected;
             setIsConnected(connected);
         });
 
         return () => unsubscribe();
-    }, [isConnected]);
+    }, []);
 
     if (isConnected === null) return null;
 

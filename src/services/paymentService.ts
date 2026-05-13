@@ -13,17 +13,14 @@ export const createPayment = async (amount: number) => {
   const transaction: Transaction = {
     id: uuid.v4() as string,
     amount,
-    status: 'INITIATED',
+    status: 'PENDING',
     retryCount: 0,
     createdAt: now,
     updatedAt: now,
   };
 
   await insertTransaction(transaction);
-
   store.dispatch(addTransaction(transaction));
-
-  await updateStatus(transaction.id, 'PENDING');
 
   processPayment(transaction.id, amount);
 
@@ -51,8 +48,8 @@ export const processPayment = async (transactionId: string, amount: number) => {
       await updateStatus(transactionId, 'FAILED');
       await incrementRetry(transactionId);
     } else {
-      // unexpected status → do nothing
-      console.log('Unknown status from backend:', res.status);
+      await updateStatus(transactionId, 'PENDING');
+      await incrementRetry(transactionId);
     }
   } catch (err) {
     await updateStatus(transactionId, 'PENDING');

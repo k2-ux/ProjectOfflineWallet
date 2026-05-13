@@ -9,43 +9,34 @@ import {
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { Transaction } from '../utils/types';
 import DeviceInfoSection from '../components/DeviceInfoSection';
 import AddTransactionModal from '../components/AddTransactionModal';
 import {
   commonStyles,
   buttonStyles,
   tableStyles,
-  badgeStyles,
-  typography,
 } from '../styles/styles';
-import { formatTime } from '../utils/funtions';
 import TransactionRow from '../components/TransactionRow';
-import { loadNextPage } from '../services/transactionLoader';
+import { loadNextPage, loadInitialPage } from '../services/transactionLoader';
 import NetworkStatusBanner from '../components/NetworkStatusBanner';
 import SyncStatusBanner from '../components/SyncStatusBanner';
 import { logoutUser } from '../services/authService';
 import AdminStatsSection from '../screens/AdminStatsSection';
+
 export const HomeScreen = () => {
   const role = useSelector((state: RootState) => state.auth.role);
-
   const isAdmin = role === 'ADMIN' || role === 'SUPERVISOR';
-
-  const transactions = useSelector(
-    (state: RootState) => state.transactions.list,
-  );
+  const transactions = useSelector((state: RootState) => state.transactions.list);
 
   const [refreshing, setRefreshing] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
-  const [adminStats, setAdminStats] = useState<any>(null);
-  const onRefresh = useCallback(() => {
+
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
     setRefreshKey(prev => prev + 1);
-
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 500);
+    await loadInitialPage();
+    setRefreshing(false);
   }, []);
 
   return (

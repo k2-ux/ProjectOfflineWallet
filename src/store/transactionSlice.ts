@@ -77,6 +77,10 @@ const transactionsSlice = createSlice({
     setLoading(state, action: PayloadAction<boolean>) {
       state.loading = action.payload;
     },
+
+    setHasMore(state, action: PayloadAction<boolean>) {
+      state.hasMore = action.payload;
+    },
   },
 });
 
@@ -87,6 +91,7 @@ export const {
   incrementRetry,
   appendTransactions,
   setLoading,
+  setHasMore,
 } = transactionsSlice.actions;
 
 export default transactionsSlice.reducer;
