@@ -6,6 +6,12 @@ This project prioritizes architecture, reliability, and edge-case handling over 
 
 ---
 
+## 🎬 Demo
+
+https://github.com/user-attachments/assets/d817696d-7840-4085-8cf4-73ba40911463
+
+---
+
 ## 📱 Screenshots
 
 <p align="center">
